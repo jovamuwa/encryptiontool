@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define KEY 0xAA  // Fixed encryption key
 int file_exists(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file) {
@@ -10,7 +9,7 @@ int file_exists(const char *filename) {
     }
     return 0;
 }
-void process_file(const char *input_filename, const char *output_filename) {
+void process_file(const char *input_filename, const char *output_filename, unsigned char key){
     if (!file_exists(input_filename)) {
         printf("Error: File '%s' not found!\n", input_filename);
         return;
@@ -25,7 +24,7 @@ void process_file(const char *input_filename, const char *output_filename) {
 
     int ch;
     while ((ch = fgetc(input_file)) != EOF) {
-        fputc(ch ^ KEY, output_file);
+        fputc(ch ^ key, output_file);
     }
 
     fclose(input_file);
@@ -35,7 +34,11 @@ void process_file(const char *input_filename, const char *output_filename) {
 
 int main() {
     char input_filename[100], output_filename[100];
+    unsigned char key;  // Add this line
     int choice;
+
+    printf("Enter encryption key (0-255): ");
+    scanf("%hhu", &key);  // Add these two lines
 
     printf("1. Encrypt a file\n2. Decrypt a file\nEnter choice: ");
     scanf("%d", &choice);
@@ -44,6 +47,6 @@ int main() {
     printf("Enter output file name: ");
     scanf("%s", output_filename);
 
-    process_file(input_filename, output_filename);
+    process_file(input_filename, output_filename, key); // Pass key here
     return 0;
 }

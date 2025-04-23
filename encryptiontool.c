@@ -32,21 +32,24 @@ void process_file(const char *input_filename, const char *output_filename, unsig
     printf("Process completed! Output file: %s\n", output_filename);
 }
 
-int main() {
-    char input_filename[100], output_filename[100];
-    unsigned char key;  // Add this line
-    int choice;
+int main(int argc, char *argv[]) {
+    if (argc != 5) {
+        printf("Usage: %s <mode> <input_file> <output_file> <key>\n", argv[0]);
+        printf("Mode: -e for encrypt, -d for decrypt\n");
+        return EXIT_FAILURE;
+    }
 
-    printf("Enter encryption key (0-255): ");
-    scanf("%hhu", &key);  // Add these two lines
+    char *mode = argv[1];
+    char *input_filename = argv[2];
+    char *output_filename = argv[3];
+    unsigned char key = (unsigned char) atoi(argv[4]);
 
-    printf("1. Encrypt a file\n2. Decrypt a file\nEnter choice: ");
-    scanf("%d", &choice);
-    printf("Enter input file name: ");
-    scanf("%s", input_filename);
-    printf("Enter output file name: ");
-    scanf("%s", output_filename);
+    if (mode[0] == '-' && (mode[1] == 'e' || mode[1] == 'd')) {
+        process_file(input_filename, output_filename, key);
+    } else {
+        printf("Invalid mode! Use -e to encrypt or -d to decrypt.\n");
+        return EXIT_FAILURE;
+    }
 
-    process_file(input_filename, output_filename, key); // Pass key here
-    return 0;
+    return EXIT_SUCCESS;
 }

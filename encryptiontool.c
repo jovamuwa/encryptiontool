@@ -2,8 +2,19 @@
 #include <stdlib.h>
 
 #define KEY 0xAA  // Fixed encryption key
-
+int file_exists(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file) {
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
 void process_file(const char *input_filename, const char *output_filename) {
+    if (!file_exists(input_filename)) {
+        printf("Error: File '%s' not found!\n", input_filename);
+        return;
+    }
     FILE *input_file = fopen(input_filename, "rb");
     FILE *output_file = fopen(output_filename, "wb");
 
